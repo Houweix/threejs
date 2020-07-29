@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #obj {
+      position: relative;
+      left: 200px;
+      top: 20px;
+      width: 50px;
+      height: 50px;
+      background: #6fb936;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="obj"></div>
+  <script src="../js/greensock-js/TweenMax.min.js"></script>
+  <script>
+    function animateObj(params) {
+
+      TweenMax.to('#obj', 2, {
+        left: 500
+      })
+    }
+    document.querySelector('#obj').addEventListener('click', animateObj)
+  </script>
+</body>
+
+</html>

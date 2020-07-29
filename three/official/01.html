@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>My first three.js app</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 创建一个场景 -->
+
+  <script src="../three.js"></script>
+  <script>
+    // 场景、相机和渲染器
+    var scene = new THREE.Scene();
+    // // // fov — 摄像机视锥体垂直视野角度 aspect — 摄像机视锥体长宽比 near — 摄像机视锥体近端面 far — 摄像机视锥体远端面
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+
+    var geometry = new THREE.BoxGeometry();
+    var material = new THREE.MeshBasicMaterial({
+      color: 0x00ff00
+    });
+    var cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+    camera.position.z = 5;
+
+    // 渲染场景
+    function animate() {
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+
+</html>
