@@ -37,6 +37,7 @@
                 document.getElementById('canvas-frame').appendChild(renderer.domElement);
                 renderer.setClearColor(0xFFFFFF, 1.0);
 
+                // 一个性能检测插件
                 stats = new Stats();
                 stats.domElement.style.position = 'absolute';
                 stats.domElement.style.left = '0px';
@@ -47,9 +48,9 @@
             var camera;
             function initCamera() {
                 camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-                camera.position.x = 100;
+                camera.position.x = 300;
                 camera.position.y = 300;
-                camera.position.z = 600;
+                camera.position.z = 300;
                 camera.up.x = 0;
                 camera.up.y = 1;
                 camera.up.z = 0;
@@ -78,7 +79,7 @@
             function initObject() {
                
 				var geometry = new THREE.BoxGeometry( 100, 100, 100 );
-				
+				// 循环给立方体的6个面设置不同的随机颜色
 				for ( var i = 0; i < geometry.faces.length; i += 2 ) {
 
 					var hex = Math.random() * 0xffffff;
@@ -86,16 +87,19 @@
 					geometry.faces[ i + 1 ].color.setHex( hex );
 
 				}
-				
+				// 设置材质
                 var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors} );
+                // 设置网格
                 mesh = new THREE.Mesh( geometry,material);
                 mesh.position = new THREE.Vector3(0,0,0);
                 scene.add(mesh);
 				
 				
             }
-			
+            
+            // 设置底部的参考网格
 			function initGrid(){
+                // 大尺寸1000，里面的小方格50
 				var helper = new THREE.GridHelper( 1000, 50 );
 				helper.setColors( 0x0000ff, 0x808080 );
 				scene.add( helper );
@@ -118,7 +122,7 @@
             // 帧循环、游戏循环
             function animation()
             {
-				//mesh.rotation.y +=0.01;
+				mesh.rotation.z +=0.01;
                 renderer.render(scene, camera);
                 requestAnimationFrame(animation);
 
