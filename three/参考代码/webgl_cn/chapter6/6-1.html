@@ -34,28 +34,35 @@
         camera.position.z = 400;
         scene = new THREE.Scene();
 
-
+        // 画一个纹理
         var geometry = new THREE.PlaneGeometry( 500, 300, 1, 1 );
+
+        // 为纹理赋予纹理坐标
         geometry.vertices[0].uv = new THREE.Vector2(0,0);
         geometry.vertices[1].uv = new THREE.Vector2(2,0);
         geometry.vertices[2].uv = new THREE.Vector2(2,2);
         geometry.vertices[3].uv = new THREE.Vector2(0,2);
-        // 纹理坐标怎么弄
+        // 纹理坐标怎么弄   加载纹理
         var texture = THREE.ImageUtils.loadTexture("textures/a.jpg",null,function(t)
         {
         });
+
+        // 将纹理应用于材质
         var material = new THREE.MeshBasicMaterial({map:texture});
         var mesh = new THREE.Mesh( geometry,material );
         scene.add( mesh );
 
-        //
+        //  监听缩放
         window.addEventListener( 'resize', onWindowResize, false );
 
     }
 
     function onWindowResize() {
+        // aspect — 摄像机视锥体长宽比
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
+        // .setSize ( width : Integer, height : Integer, updateStyle : Boolean ) : null
+        // 将输出canvas的大小调整为(width, height)并考虑设备像素比，且将视口从(0, 0)开始调整到适合大小 将updateStyle设置为false以阻止对canvas的样式做任何改变。
         renderer.setSize( window.innerWidth, window.innerHeight );
     }
 
