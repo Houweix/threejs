@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>这里是renderTarget的实例</title>
+</head>
+
+<body>
+
+  <!-- r100，支持旧版写法 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/three.js/100/three.min.js"></script>
+  <!-- 最新的r119 -->
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r119/three.js"></script> -->
+
+  <script>
+    let RenderTarget = '';
+    let Camera = '';
+    let RTScene = '';
+    let Scene = '';
+    let Renderer = '';
+    let Box = '';
+
+
+    function initCamera() {
+      Camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      Camera.position.x = 2;
+      Camera.position.y = 2;
+      Camera.position.z = 2;
+      Camera.lookAt(0, 0, 0);
+    }
+
+    function createRTScene() {
+      // 创建场景
+      RTScene = new THREE.Scene();
+
+      // 向场景添加灯光
+      const RTLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      RTLight.position.set(0, 1, 1).normalize();
+      RTScene.add(RTLight);
+
+      // 向场景添加环面
+      const geometryTorus = new THREE.TorusGeometry(10, 3, 16, 100);
+      // 使用红色的材质
+      const materialTorus = new THREE.LineBasicMaterial({
+        color: 0xff0000
+      });
+      const Torus = new THREE.Mesh(geometryTorus, materialTorus);
+      Torus.scale.set(0.05, 0.05, 0.05);
+      RTScene.add(Torus);
+    }
+
+    // 设置rt尺寸
+    function setRenderTargetSize() {
+      const RT_SIZE = 300;
+      RenderTarget = new THREE.WebGLRenderTarget(RT_SIZE, RT_SIZE);
+    }
+
+    // 创建一般场景，将RTScene用作贴图
+    function createScene() {
+      Scene = new THREE.Scene();
+
+      const AmbientLight = new THREE.AmbientLight(0xffffff, 1.5);
+      Scene.add(AmbientLight);
+
+      const Light = new THREE.DirectionalLight(0xffffff, 1.5);
+      Light.position.set(0, 1, 1).normalize();
+      Scene.add(Light);
+
+      // 向场景添加立方体
+      const geometryBox = new THREE.BoxBufferGeometry(1, 1, 1);
+      const materialBox = new THREE.MeshStandardMaterial({
+        color: 0xff9300, // 橙色
+        map: RenderTarget.texture // 使用 RTScene 作为贴图，也就是会贴一张环面图
+      });
+      Box = new THREE.Mesh(geometryBox, materialBox);
+      Scene.add(Box);
+
+    }
+
+    function createRender() {
+      Renderer = new THREE.WebGLRenderer({
+        antialias: true // 开启消除锯齿
+      });
+      Renderer.setClearColor(0xffffff, 1.0); // 设置画布背景色
+      Renderer.setPixelRatio(window.devicePixelRatio); // 设置屏幕像素比
+      Renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(Renderer.domElement); // 把 canvas 元素放到 body 内
+    }
+
+    function draw3d() {
+      // r100旧版写法
+      // 注意这两个 render 的顺序，第一个的结果要给第二个使用，所以不能写反了
+      Renderer.render(RTScene, Camera, RenderTarget); // 离屏渲染并存放到 RenderTarget 里
+      Renderer.render(Scene, Camera); // 渲染显示到屏幕上的场景
+    }
+
+    function animation() {
+      Renderer.clear();
+      Box.rotation.y += 0.01; // 让立方体沿着 y 轴不停的旋转
+      draw3d();
+      requestAnimationFrame(animation); // 循环
+    }
+
+    initCamera();
+    createRTScene();
+    setRenderTargetSize();
+    createScene();
+    createRender();
+
+
+    animation();
+  </script>
+</body>
+
+</html>
