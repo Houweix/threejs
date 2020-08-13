@@ -11,6 +11,7 @@
 
   <!-- r100，支持旧版写法 -->
   <script src="https://cdn.bootcdn.net/ajax/libs/three.js/100/three.min.js"></script>
+  <script src="../lib/stats.js"></script>
   <!-- 最新的r119 -->
   <!-- <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r119/three.js"></script> -->
 
@@ -21,6 +22,8 @@
     let Scene = '';
     let Renderer = '';
     let Box = '';
+
+    let stats = '';
 
 
     function initCamera() {
@@ -77,7 +80,11 @@
       Box = new THREE.Mesh(geometryBox, materialBox);
       Scene.add(Box);
 
+      const axesHelper = new THREE.AxesHelper(5);
+      Scene.add(axesHelper);
+
     }
+
 
     function createRender() {
       Renderer = new THREE.WebGLRenderer({
@@ -100,7 +107,18 @@
       Renderer.clear();
       Box.rotation.y += 0.01; // 让立方体沿着 y 轴不停的旋转
       draw3d();
+      stats.update();
       requestAnimationFrame(animation); // 循环
+
+    }
+
+    function initStats() {
+      stats = new Stats();
+      stats.setMode(0); // 0: fps, 1: ms
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.left = '0px';
+      stats.domElement.style.top = '0px';
+      document.documentElement.appendChild(stats.domElement);
     }
 
     initCamera();
@@ -108,6 +126,7 @@
     setRenderTargetSize();
     createScene();
     createRender();
+    initStats();
 
 
     animation();
