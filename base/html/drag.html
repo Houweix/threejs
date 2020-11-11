@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拖放测试</title>
+  <style>
+    .drag-area {
+      width: 800px;
+      height: 800px;
+      background-color: red;
+      position: relative;
+      left: 100px;
+      top: 300;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="drag-area" id="dropbox">
+
+  </div>
+  <script>
+    let dropbox;
+
+    function dragenter(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    function dragover(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    function drop(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var dt = e.dataTransfer;
+      var files = dt.files;
+
+      console.log(files);
+    }
+
+
+    dropbox = document.getElementById("dropbox");
+    dropbox.addEventListener("dragenter", dragenter, false);
+    dropbox.addEventListener("dragover", dragover, false);
+    dropbox.addEventListener("drop", drop, false);
+  </script>
+</body>
+
+</html>
